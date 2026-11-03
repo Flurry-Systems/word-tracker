@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doc Word Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+     <div class="card">
+<h1>Doc Word Tracker</h1>
+
+<label for="goal">My Goal</label>
+<input type="number" id="goal" value="50000" placeholder="Enter your goal here"> 
+
+<!--Min & Max Words-->
+<label for="minWords">Daily minimum</label>
+<input type="number" id="minWords" value="500">
+
+<label for="maxWords">Daily maximum</label>
+<input type="number" id="maxWords" value="2500">
+
+<!--Daily Word Count-->
+<label for="todayWords">Today's Word Count</label>
+<input type="number" id="todayWords" value="0">
+<button id="addWords">Add Words</button>
+
+
+<!-- Progress Bar -->
+<p id="total">0 words written</p>
+<progress id="progressBar" value="0" max="50000"></progress>
+
+<!--Words Per Day-->
+<p id="perDay">Words per day needed: 1667</p>
+<p id="dailyStatus"></p>
+<button id="resetBtn" class="reset-btn">Reset</button>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <script>
+const goalInput = document.getElementById("goal");
+const minWordsInput = document.getElementById("minWords");
+const maxWordsInput = document.getElementById("maxWords");
+const todayWordsInput = document.getElementById("todayWords");
+const addWordsButton = document.getElementById("addWords");
+const resetButton = document.getElementById("resetBtn");
+const totalDisplay = document.getElementById("total");
+const progressBar = document.getElementById("progressBar");
+const perDayDisplay = document.getElementById("perDay");
+const dailyStatusDisplay = document.getElementById("dailyStatus");
+
+// Load saved progress
+const todayDate = new Date().toDateString();
+let totalWords = Number(localStorage.getItem("totalWords"));
+let wordsToday = Number(localStorage.getItem("wordsToday"));
+const savedDate = localStorage.getItem("savedDate");
+
+// New day? Start today's count over
+if (savedDate !== todayDate) {
+  wordsToday = 0;
+  localStorage.setItem("wordsToday", wordsToday);
+  localStorage.setItem("savedDate", todayDate);
+}
+
+// Updates the total, progress bar, and words per day
+function updateDisplay() {
+  const goal = Number(goalInput.value);
+  totalDisplay.textContent = `${totalWords} words written (${wordsToday} today)`;
+  progressBar.max = goal;
+  progressBar.value = totalWords;
+
+  const today = new Date();
+  const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const daysLeft = lastDay - today.getDate() + 1;
+  const wordsLeft = Math.max(goal - totalWords, 0);
+  const wordsPerDay = Math.ceil(wordsLeft / daysLeft);
+
+  perDayDisplay.textContent = `Words per day needed: ${wordsPerDay}`;
+}
+
+// Add words
+addWordsButton.addEventListener("click", function () {
+  const todayWords = Number(todayWordsInput.value);
+  if (todayWords <= 0) return;
+
+  totalWords += todayWords;
+  wordsToday += todayWords;
+
+  localStorage.setItem("totalWords", totalWords);
+  localStorage.setItem("wordsToday", wordsToday);
+  localStorage.setItem("savedDate", todayDate);
+
+  updateDisplay();
+  todayWordsInput.value = "";
+
+  const minWords = Number(minWordsInput.value);
+  const maxWords = Number(maxWordsInput.value);
+
+  if (wordsToday < minWords) {
+    dailyStatusDisplay.textContent =
+      `You're ${minWords - wordsToday} words from your minimum. Every word counts!`;
+  } else if (wordsToday >= maxWords) {
+    dailyStatusDisplay.textContent =
+      "Rest Up, you can take a break today. You deserve a reward";
+    confetti({ particleCount: 150, spread: 90 });
+  } else {
+    dailyStatusDisplay.textContent = "You are on track! Keep it Up!";
+  }
+});
+
+// Reset everything
+resetButton.addEventListener("click", function () {
+  if (!confirm("Start over? This erases all your saved words.")) return;
+
+  totalWords = 0;
+  wordsToday = 0;
+  localStorage.removeItem("totalWords");
+  localStorage.removeItem("wordsToday");
+  dailyStatusDisplay.textContent = "";
+  updateDisplay();
+});
+
+// Update when the goal changes, and once when the page loads
+goalInput.addEventListener("input", updateDisplay);
+updateDisplay();
+
+  </script>
+     </div>
+
+
+</body>
+</html>
+
+
+
+
+

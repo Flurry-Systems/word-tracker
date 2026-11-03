@@ -1,0 +1,32 @@
+:root {
+    --cream: #F5EFE6;
+    --khaki: #EBE1D1;
+    --brown: #4A3426;
+    --warm-brown: #8B6B4E;
+    --burgundy: #7A1F3D;
+    --magenta: #B83280;
+  }
+
+  body {
+    background: var(--cream);
+    color: var(--brown);
+    font-family: Georgia, serif;
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  .card {
+    box-shadow: 0 8px 24px rgba(74, 52, 38, 0.15);
+    background: var(--khaki);
+    padding: 24px;
+    border:#4A3426 solid;
+    border-radius: 16px;
+
+  }
+  .reset-btn {
+  background: transparent;
+  color: var(--warm-brown);
+  border: 1px solid var(--warm-brown);
+  margin-top: 16px;
+}
