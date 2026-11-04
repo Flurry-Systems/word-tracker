@@ -14,10 +14,10 @@
 <input type="number" id="goal" value="50000" placeholder="Enter your goal here"> 
 
 <!--Min & Max Words-->
-<label for="minWords">Daily minimum</label>
+<label for="minWords">Minimum</label>
 <input type="number" id="minWords" value="500">
 
-<label for="maxWords">Daily maximum</label>
+<label for="maxWords">Maximum</label>
 <input type="number" id="maxWords" value="2500">
 
 <!--Daily Word Count-->
@@ -100,7 +100,7 @@ addWordsButton.addEventListener("click", function () {
       `You're ${minWords - wordsToday} words from your minimum. Every word counts!`;
   } else if (wordsToday >= maxWords) {
     dailyStatusDisplay.textContent =
-      "Rest Up, you can take a break today. You deserve a reward";
+      "Rest Up, you can take a break now. You deserve a reward";
     confetti({ particleCount: 150, spread: 90 });
   } else {
     dailyStatusDisplay.textContent = "You are on track! Keep it Up!";
